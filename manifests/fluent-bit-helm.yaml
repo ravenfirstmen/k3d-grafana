@@ -1,0 +1,50 @@
+# Fluent bit
+# https://github.com/fluent/helm-charts/blob/main/charts/fluent-bit/values.yaml
+# https://docs.fluentbit.io/manual/pipeline/outputs/loki
+# Internal endpoints
+# http://loki-gateway.monitoring.svc.cluster.local/   
+# http://loki-gateway.monitoring.svc.cluster.local/loki/api/v1/push 
+---
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: fluent-bit
+  namespace: kube-system
+spec:
+  repo: https://fluent.github.io/helm-charts
+  chart: fluent-bit
+  targetNamespace: monitoring
+  createNamespace: true  
+  valuesContent: |-
+    serviceMonitor:
+      enabled: true
+      namespace: monitoring
+      interval: 15s
+      scrapeTimeout: 15s
+      jobLabel: fluentbit
+      selector:
+        release: prom  
+    dashboards:
+      enabled: false
+
+    config:
+      filters: |
+        [FILTER]
+            Name kubernetes
+            Match kube.*
+            Merge_Log On
+            Keep_Log Off
+            K8S-Logging.Parser Off
+            K8S-Logging.Exclude Off        
+            Kube_URL  https://kubernetes.default.svc:443
+
+      outputs: |
+        [OUTPUT]
+            name loki
+            match *
+            host loki-gateway.monitoring.svc.cluster.local
+            port 80
+            labels job=fluentbit, $sub['stream']
+            remove_keys 'kubernetes,stream'
+            auto_kubernetes_labels false
+            line_format  json
