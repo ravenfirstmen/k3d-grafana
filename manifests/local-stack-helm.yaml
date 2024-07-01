@@ -56,9 +56,9 @@ spec:
       - name: ENFORCE_IAM
         value: "false"
       - name: AWS_ACCESS_KEY_ID
-        value: "keyid"
+        value: "fakekeyid"
       - name: AWS_SECRET_ACCESS_KEY
-        value: "acc3$$id"
+        value: "fakeacesskey"
       - name: LEGACY_DIRECTORIES
         value: "1"
       - name: DEBUG
