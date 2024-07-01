@@ -18,7 +18,10 @@ k3d cluster create $CLUSTER_NAME \
     --port "9090:9090@loadbalancer" \
     --port "4222:4222@loadbalancer" \
     --port "3000:3000@loadbalancer" \
+    --port "4318:4320@loadbalancer" \
+    --port "4566:4566@loadbalancer" \
+    --servers 1 \
     --agents 3 \
     --k3s-arg '--disable=metrics-server@server:*' \
-    --volume ${SHARED_VOLUME}/machine-id:/etc/machine-id \
-    --volume "$(pwd)/manifests:/var/lib/rancher/k3s/server/manifests/custom"
+    --volume "${SHARED_VOLUME}/machine-id:/etc/machine-id@server:*;agent:*" \
+    --volume "$(pwd)/manifests:/var/lib/rancher/k3s/server/manifests/custom@server:*"

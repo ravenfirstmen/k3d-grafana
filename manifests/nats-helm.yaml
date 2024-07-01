@@ -10,6 +10,24 @@ spec:
   targetNamespace: nats
   createNamespace: true  
   valuesContent: |-
+    auth:
+      enabled: false
+    natsBox:
+      enabled: false
+    reloader:
+      enabled: false
+    promExporter:
+      enabled: false
+    config:
+      jetstream:
+        enabled: true
+      logging:
+        debug: true
+        trace: false
+      merge:
+        server_name: "nats"
+        authorization:
+          token: "s3cr3t"
     service:
       merge:
         spec:

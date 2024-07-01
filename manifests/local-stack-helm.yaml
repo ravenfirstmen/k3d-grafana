@@ -1,0 +1,85 @@
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-volume
+  labels:
+    type: local
+spec:
+  storageClassName: local-path
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/mnt/data"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pv-claim
+  namespace: localstack
+spec:
+  storageClassName: local-path
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: localstack
+  namespace: kube-system
+spec:
+  repo: https://localstack.github.io/helm-charts
+  chart: localstack
+  targetNamespace: localstack
+  createNamespace: true  
+  set:
+      startServices: "dynamodb,ses,sts"
+  valuesContent: |-
+    service:
+      type: LoadBalancer
+    persistence:
+      enabled: true
+      existingClaim: "pv-claim"
+    mountDind:
+      enabled: true
+      forceTLS: false
+    lambda:
+      executor: docker
+    extraEnvVars:
+      - name: USE_SSL
+        value: "false"
+      - name: ENFORCE_IAM
+        value: "false"
+      - name: AWS_ACCESS_KEY_ID
+        value: "keyid"
+      - name: AWS_SECRET_ACCESS_KEY
+        value: "acc3$$id"
+      - name: LEGACY_DIRECTORIES
+        value: "1"
+      - name: DEBUG
+        value: "1"
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: localstack
+  namespace: localstack
+  annotations:
+    ingress.kubernetes.io/ssl-redirect: "false"          
+spec:
+  ingressClassName: traefik
+  rules:
+  - http:
+      paths:
+      - path: /
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: localstack
+            port:
+              number: 4566
