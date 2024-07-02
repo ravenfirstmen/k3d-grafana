@@ -257,7 +257,7 @@ spec:
             Match         fluent.*
             Log_Level     info
             Host          loki-gateway.monitoring.svc.cluster.local
-            port          80
+            port          3100
             labels        job=fluentbit, ring=lab, stamp=local
             label_map_path /fluent-bit/etc/conf/labelmap.conf
             storage.total_limit_size 1G
@@ -267,7 +267,7 @@ spec:
             Match         auditevents
             Log_Level     info
             Host          loki-gateway.monitoring.svc.cluster.local
-            port          80
+            port          3100
             labels        job=auditevents, ring=lab, stamp=local
             label_map_path /fluent-bit/etc/conf/labelmap.conf
             storage.total_limit_size 1G
@@ -277,7 +277,7 @@ spec:
             Match         kube.*
             Log_Level     info
             Host          loki-gateway.monitoring.svc.cluster.local
-            port          80
+            port          3100
             labels        job=auditevents, ring=lab, stamp=local
             label_map_path /fluent-bit/etc/conf/labelmap.conf
             storage.total_limit_size 1G
@@ -287,7 +287,7 @@ spec:
             Match         host.*
             Log_Level     info
             Host          loki-gateway.monitoring.svc.cluster.local
-            port          80
+            port          3100
             labels        job=auditevents, ring=lab, stamp=local
             label_map_path /fluent-bit/etc/conf/labelmap.conf
             storage.total_limit_size 1G
@@ -297,7 +297,7 @@ spec:
             Match         sdlc.*
             Log_Level     info
             Host          loki-gateway.monitoring.svc.cluster.local
-            port          80
+            port          3100
             labels        job=auditevents, ring=lab, stamp=local
             label_map_path /fluent-bit/etc/conf/labelmap.conf
             storage.total_limit_size 1G

@@ -10,7 +10,7 @@ if [ -f /etc/machine-id ]; then
   cp -f /etc/machine-id ${SHARED_VOLUME}/
 else
   #touch ${SHARED_VOLUME}/machine-id
-  $(uuid | sed 's/-//g') > ${SHARED_VOLUME}/machine-id
+  $(uuidgen | sed 's/-//g') > ${SHARED_VOLUME}/machine-id
 fi
 
 k3d cluster create $CLUSTER_NAME \
@@ -18,6 +18,7 @@ k3d cluster create $CLUSTER_NAME \
     --port "9090:9090@loadbalancer" \
     --port "4222:4222@loadbalancer" \
     --port "3000:3000@loadbalancer" \
+    --port "3100:3100@loadbalancer" \
     --port "4318:4320@loadbalancer" \
     --port "4566:4566@loadbalancer" \
     --servers 1 \
