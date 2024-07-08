@@ -1,23 +1,8 @@
 ---
 apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: pv-volume
-  labels:
-    type: local
-spec:
-  storageClassName: local-path
-  capacity:
-    storage: 1Gi
-  accessModes:
-    - ReadWriteOnce
-  hostPath:
-    path: "/mnt/data"
----
-apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: pv-claim
+  name: ls-pv-claim
   namespace: localstack
 spec:
   storageClassName: local-path
@@ -25,7 +10,7 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 1Gi
+      storage: 2Gi
 ---
 apiVersion: helm.cattle.io/v1
 kind: HelmChart
@@ -44,7 +29,7 @@ spec:
       type: LoadBalancer
     persistence:
       enabled: true
-      existingClaim: "pv-claim"
+      existingClaim: ls-pv-claim
     mountDind:
       enabled: true
       forceTLS: false

@@ -81,7 +81,6 @@ spec:
     podAnnotations:
       "secret.reloader.stakater.com/reload": otel-secrets
     
-    
     service:
       enabled: true
       type: LoadBalancer
@@ -113,7 +112,6 @@ spec:
         enabled: false
       zipkin:
         enabled: false
-    
     
     podMonitor:
       enabled: true
