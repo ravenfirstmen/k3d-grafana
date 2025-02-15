@@ -6,16 +6,12 @@ SHARED_VOLUME=$(pwd)/.volume
 mkdir -p ${SHARED_VOLUME}
 
 # this is manadatory in order to fluent-bit work
-if [ -f /etc/machine-id ]; then
-  cp -f /etc/machine-id ${SHARED_VOLUME}/
-else
-  uuidgen -r -x | tr -d '-' > ${SHARED_VOLUME}/machine-id
-fi
+uuidgen -r -x | tr -d '-' > ${SHARED_VOLUME}/machine-id
 
-    # --registry-create k3d-registry.localhost:5000 \
+# --registry-create k3d-registry.localhost:5000 \
 k3d cluster create $CLUSTER_NAME \
-    --api-port 6443 \
-    --registry-create k3d-registry.localhost:5000 \
+    --api-port "localhost:6443" \
+    --registry-create "k3d-registry.localhost:5000" \
     --port "9090:9090@loadbalancer" \
     --port "4222:4222@loadbalancer" \
     --port "3000:3000@loadbalancer" \
