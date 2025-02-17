@@ -1,3 +1,30 @@
+# Kube state metrics
+---
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: kube-state-metrics
+  namespace: kube-system
+spec:
+  repo: https://prometheus-community.github.io/helm-charts
+  chart: kube-state-metrics
+  targetNamespace: monitoring
+  createNamespace: true  
+
+# pushgateway
+---
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: prometheus-pushgateway
+  namespace: kube-system
+spec:
+  repo: https://prometheus-community.github.io/helm-charts
+  chart: prometheus-pushgateway
+  targetNamespace: monitoring
+  createNamespace: true  
+
+# Prometheus
 ---
 apiVersion: helm.cattle.io/v1
 kind: HelmChart
@@ -17,6 +44,7 @@ spec:
     prometheus:
       service:
         type: LoadBalancer
+
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
