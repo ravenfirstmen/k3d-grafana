@@ -53,14 +53,14 @@ spec:
       resources:
         limits:
           cpu: 3
-          memory: 4Gi
+          memory: 2Gi
         requests:
           cpu: 2
           memory: 2Gi
       extraEnv:
         # Keep a little bit lower than memory limits
         - name: GOMEMLIMIT
-          value: 3750MiB   
+          value: 1750MiB   
     chunksCache:
       # default is 500MB, with limited memory keep this smaller
       writebackSizeLimit: 10MB  
@@ -128,7 +128,8 @@ spec:
   createNamespace: true  
   valuesContent: |-
     adminUser: admin
-    adminPassword: admin
+    adminPassword: password 
+
     service:
       port: 3000
       type: LoadBalancer
@@ -136,6 +137,24 @@ spec:
       enabled: false
     metrics:
       enabled: true
+
+    # grafana.ini:
+    #   auth:
+    #     disable_login: true
+    
+    #   users:
+    #     allow_sign_up: false
+    #     auto_assign_org_id: 1
+    #     auto_assign_org_role: Admin
+
+    #   auth.anonymous:
+    #     enabled: true
+    #     org_role: Admin
+
+    #   security:
+    #     cookie_secure: false
+    #     cookie_samesite: none
+
     datasources:
         datasources.yaml:
           apiVersion: 1
@@ -173,24 +192,3 @@ spec:
                   datasourceUid: prom
                 serviceMap:
                   datasourceUid: prom   
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: grafana
-  namespace: monitoring
-  annotations:
-    ingress.kubernetes.io/ssl-redirect: "false"          
-spec:
-  ingressClassName: traefik
-  rules:
-  - http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: grafana
-            port:
-              number: 3000 
-
